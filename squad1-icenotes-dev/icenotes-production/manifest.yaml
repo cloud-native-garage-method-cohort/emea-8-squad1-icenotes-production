@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+    app.openshift.io/vcs-ref: 93a7c367c49677d0847adc46532b0a53cf8913d5
     app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
   labels:
     app.kubernetes.io/instance: icenotes
@@ -13,7 +13,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 3000
+    targetPort: 8080
   selector:
     app.kubernetes.io/instance: icenotes
     app.kubernetes.io/name: icenotes
@@ -24,7 +24,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+    app.openshift.io/vcs-ref: 93a7c367c49677d0847adc46532b0a53cf8913d5
     app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
   labels:
     app.kubernetes.io/instance: icenotes
@@ -41,7 +41,7 @@ spec:
   template:
     metadata:
       annotations:
-        app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+        app.openshift.io/vcs-ref: 93a7c367c49677d0847adc46532b0a53cf8913d5
         app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
       labels:
         app.kubernetes.io/instance: icenotes
@@ -56,20 +56,20 @@ spec:
         - name: PROTOCOLS
         - name: LOG_LEVEL
           value: debug
-        image: quay.io/bott_ibm/icenotes-fe:4f3883fc4dbb573a03af6da212e87e22345efc3f
+        image: quay.io/bott_ibm/icenotes-fe:93a7c367c49677d0847adc46532b0a53cf8913d5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
           httpGet:
             path: /
-            port: 3000
+            port: 8080
             scheme: HTTP
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
         name: icenotes-fe
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
           name: http
           protocol: TCP
         readinessProbe:
@@ -94,7 +94,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   annotations:
-    app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+    app.openshift.io/vcs-ref: 93a7c367c49677d0847adc46532b0a53cf8913d5
     app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
   labels:
     app.kubernetes.io/instance: icenotes
