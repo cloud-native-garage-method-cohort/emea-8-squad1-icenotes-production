@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+    app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
+  labels:
+    app.kubernetes.io/instance: icenotes
+    app.kubernetes.io/name: icenotes
+  name: icenotes-fe
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app.kubernetes.io/instance: icenotes
+    app.kubernetes.io/name: icenotes
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+    app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
+  labels:
+    app.kubernetes.io/instance: icenotes
+    app.kubernetes.io/name: icenotes
+  name: icenotes-fe
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: icenotes
+      app.kubernetes.io/name: icenotes
+  template:
+    metadata:
+      annotations:
+        app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+        app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
+      labels:
+        app.kubernetes.io/instance: icenotes
+        app.kubernetes.io/name: icenotes
+        app.openshift.io/runtime: js
+        app.openshift.io/vcs-ref: bar
+        app.openshift.io/vcs-uri: foo
+    spec:
+      containers:
+      - env:
+        - name: INGRESS_HOST
+        - name: PROTOCOLS
+        - name: LOG_LEVEL
+          value: debug
+        image: quay.io/bott_ibm/icenotes-fe:4f3883fc4dbb573a03af6da212e87e22345efc3f
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 3000
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: icenotes-fe
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: 4f3883fc4dbb573a03af6da212e87e22345efc3f
+    app.openshift.io/vcs-uri: https://github.com/cloud-native-garage-method-cohort/emea-8-squad1-icenotes-fe
+  labels:
+    app.kubernetes.io/instance: icenotes
+    app.kubernetes.io/name: icenotes
+  name: icenotes-fe
+spec:
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: icenotes-fe
+    weight: 100
+  wildcardPolicy: None
